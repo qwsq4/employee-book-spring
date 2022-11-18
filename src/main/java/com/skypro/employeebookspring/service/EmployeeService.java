@@ -35,21 +35,21 @@ public class EmployeeService {
                 .sum();
     }
 
-    public Employee getSalaryMin() {
+    public Employee getSalaryMinEmployee() {
         return employees.values()
                 .stream()
                 .min(salaryComparator)
                 .get();
     }
 
-    public Employee getSalaryMax() {
+    public Employee getSalaryMaxEmployee() {
         return employees.values()
                 .stream()
                 .max(salaryComparator)
                 .get();
     }
 
-    public double getSalaryAverage() {
+    public double getAverageSalary() {
         return employees.values()
                 .stream()
                 .mapToInt(Employee::getSalary)
@@ -60,7 +60,7 @@ public class EmployeeService {
     public Collection<Employee> getSalaryHigh() {
         Map<Integer, Employee> highSalaryEmployees = new HashMap<>();
         for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getSalary() > getSalaryAverage()) {
+            if (employees.get(i).getSalary() > getAverageSalary()) {
                 highSalaryEmployees.put(employees.get(i).getId(), employees.get(i));
             }
         }
