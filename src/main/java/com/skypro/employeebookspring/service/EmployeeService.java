@@ -14,18 +14,20 @@ public class EmployeeService {
         return this.employees.values();
     }
 
-    public Employee addEmployee(EmployeeRequest employeeRequest) {
+    public String addEmployee(EmployeeRequest employeeRequest) {
         if (employeeRequest.getFirstName() == null || employeeRequest.getLastName() == null) {
             throw new IllegalArgumentException("Имя работника должно быть указано");
         }
-
-        Employee employee = new Employee(employeeRequest.getFirstName(),
-                employeeRequest.getLastName(),
-                employeeRequest.getDepartment(),
-                employeeRequest.getSalary());
-
-        this.employees.put(employee.getId(), employee);
-        return employee;
+        try {
+            Employee employee = new Employee(employeeRequest.getFirstName(),
+                    employeeRequest.getLastName(),
+                    employeeRequest.getDepartment(),
+                    employeeRequest.getSalary());
+            this.employees.put(employee.getId(), employee);
+            return employee.toString();
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
     }
 
     public int getSalarySum() {
@@ -74,3 +76,4 @@ public class EmployeeService {
         }
     };
 }
+

@@ -24,7 +24,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public Employee createEmployee(@RequestBody EmployeeRequest employeeRequest) {
+    public String createEmployee(@RequestBody EmployeeRequest employeeRequest) {
         return this.employeeService.addEmployee(employeeRequest);
     }
 
@@ -48,3 +48,4 @@ public class EmployeeController {
         return this.employeeService.getSalaryHigh();
     }
 }
+
