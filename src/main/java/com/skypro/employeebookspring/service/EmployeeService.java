@@ -1,10 +1,12 @@
 package com.skypro.employeebookspring.service;
 
 import com.skypro.employeebookspring.model.Employee;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import com.skypro.employeebookspring.record.EmployeeRequest;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -14,20 +16,24 @@ public class EmployeeService {
         return this.employees.values();
     }
 
-    public String addEmployee(EmployeeRequest employeeRequest) {
-        if (employeeRequest.getFirstName() == null || employeeRequest.getLastName() == null) {
+    public Employee addEmployee(EmployeeRequest employeeRequest) throws IllegalArgumentException{
+        if (StringUtils.isEmpty(employeeRequest.getFirstName()) || StringUtils.isEmpty(employeeRequest.getLastName())) {
             throw new IllegalArgumentException("Имя работника должно быть указано");
         }
-        try {
+
+        if (employees.containsValue(employeeRequest)) {
+            throw new IllegalArgumentException("Такой работник уже существует");
+        }
             Employee employee = new Employee(employeeRequest.getFirstName(),
                     employeeRequest.getLastName(),
                     employeeRequest.getDepartment(),
                     employeeRequest.getSalary());
             this.employees.put(employee.getId(), employee);
-            return employee.toString();
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
+            return employee;
+    }
+
+    public Map<Integer, Employee> getEmployees() {
+        return employees;
     }
 
     public int getSalarySum() {
@@ -59,14 +65,11 @@ public class EmployeeService {
                 .getAsDouble();
     }
 
-    public Collection<Employee> getSalaryHigh() {
-        Map<Integer, Employee> highSalaryEmployees = new HashMap<>();
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getSalary() > getAverageSalary()) {
-                highSalaryEmployees.put(employees.get(i).getId(), employees.get(i));
-            }
-        }
-        return highSalaryEmployees.values();
+    public List<Employee> getSalaryHigh() {
+        return employees.values()
+                .stream()
+                .filter(e -> e.getSalary() > getAverageSalary())
+                .collect(Collectors.toList());
     }
 
     Comparator<Employee> salaryComparator = new Comparator<Employee>() {
