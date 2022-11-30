@@ -24,8 +24,12 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public Employee createEmployee(@RequestBody EmployeeRequest employeeRequest) {
-        return this.employeeService.addEmployee(employeeRequest);
+    public String createEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        try {
+            return this.employeeService.addEmployee(employeeRequest).toString();
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
     }
 
     @GetMapping("/employee/salary/sum")
@@ -48,3 +52,4 @@ public class EmployeeController {
         return this.employeeService.getSalaryHigh();
     }
 }
+
